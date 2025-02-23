@@ -5,22 +5,29 @@ package My::PriceCalculator;
 use Exporter 'import';
 
 our @EXPORT_OK = qw(
-    total_discount_rate
+    total_discount_percentage
     selling_price
 );
 
-sub total_discount_rate($user, $discount) {
-    my $rate = 0.0;
-    if ($user->is_premium) {
-        $rate += 0.10
-    }
-    if ($discount->rate > 0) {
-        $rate += $discount->rate;
-    }
-    return $rate;
+use List::Util qw(min);
+
+# 割引率の上限
+use constant MAX_DISCOUNT_PERCENTAGE => 80;
+
+# 販売価格を計算する
+sub selling_price($sale_product, $user, $discount) {
+    my $total_discount_percentage = total_discount_percentage($user, $discount);
+    return floor($sale_product->price * (100 - $total_discount_percentage) / 100)
 }
 
-sub selling_price($sale_product, $user, $discount=undef) {
-    my $total_discount_rate = total_discount_rate($user, $discount);
-    return floor( $sale_product->price * (1 - $total_discount_rate) );
+# 適用される割引率を計算する
+sub total_discount_percentage($user, $discount) {
+    my $percentage = 0;
+    if ($user->is_premium) {
+        $percentage += 10
+    }
+    if ($discount->percentage > 0) {
+        $percentage += $discount->percentage;
+    }
+    return min($percentage, MAX_DISCOUNT_PERCENTAGE)
 }
