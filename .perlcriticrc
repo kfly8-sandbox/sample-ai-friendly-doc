@@ -1,0 +1,30 @@
+severity = 3
+program-extensions = .pl .t
+verbose = %f: %m at line %l, column %c.  %e [%p]\n
+
+# Modern Perl Practices
+# ---------------------
+
+# v5.40といった表記は許容
+[-ValuesAndExpressions::ProhibitVersionStrings]
+
+# class My::XXXと書いてパッケージ宣言しているので許容
+[-Modules::RequireExplicitPackage]
+
+# module_true featureが利用されているので許容
+[-Modules::RequireEndWithOne]
+
+[TestingAndDebugging::RequireUseStrict]
+equivalent_modules = v5.40
+
+[TestingAndDebugging::RequireUseWarnings]
+equivalent_modules = v5.40
+
+# Following My Coding Standard
+# ----------------------------
+
+# constantプラグマの利用は許容。foldingができて良い
+[-ValuesAndExpressions::ProhibitConstantPragma]
+
+# /x modifierがなくても良い
+[-RegularExpressions::RequireExtendedFormatting]
