@@ -6,13 +6,13 @@ package My::PriceCalculator;
 use Exporter 'import';
 
 our @EXPORT_OK = qw(
-    total_discount_percentage
-    selling_price
+  total_discount_percentage
+  selling_price
 );
 
 use List::Util qw(min);
-use POSIX qw(round floor);
-use Result::Simple qw(Ok Err);
+use POSIX qw(floor round);
+use Result::Simple qw(Err Ok);
 
 # 割引率の上限
 use constant MAX_DISCOUNT_PERCENTAGE => 80;
@@ -24,7 +24,7 @@ use constant ERROR_COUPON_AND_SALE => 'クーポンとセール商品は併用�
 sub selling_price($sale_product, $user, $discount, $coupon = undef) {
     my ($total_discount_percentage, $err) = total_discount_percentage($user, $discount, $coupon);
     return Err($err) if $err;
-    return Ok(floor($sale_product->price * (100 - $total_discount_percentage) / 100))
+    return Ok(floor($sale_product->price * (100 - $total_discount_percentage) / 100));
 }
 
 # 適用される割引率を計算する

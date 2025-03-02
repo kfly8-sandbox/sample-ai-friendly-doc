@@ -1,0 +1,5 @@
+--character-encoding=utf8
+--maximum-line-length=0
+--freeze-whitespace
+--quiet
+--backup-file-extension=/

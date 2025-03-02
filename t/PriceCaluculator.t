@@ -1,23 +1,21 @@
+use v5.40;
 use Test2::V0;
 use utf8;
 
-use My::PriceCalculator qw(
-    total_discount_percentage
-    selling_price
-);
+use My::PriceCalculator qw(selling_price total_discount_percentage);
 
-use My::User;
-use My::Discount;
-use My::SaleProduct;
-use My::Coupon;
+use My::User ();
+use My::Discount ();
+use My::SaleProduct ();
+use My::Coupon ();
 
 subtest '販売価格 / selling_price' => sub {
     my $normal_user = My::User->new( id => 1, is_premium => 0 );
     my $premium_user = My::User->new( id => 2, is_premium => 1 );
 
-    my sub subject {
-        my ($result, $err) = selling_price(@_);
-        [ $result, $err ];
+    my sub subject(@args) {
+        my ($result, $err) = selling_price(@args);
+        return [ $result, $err ];
     }
 
     subtest '2. 販売価格の計算' => sub {
@@ -47,7 +45,7 @@ subtest '販売価格 / selling_price' => sub {
         subtest '3.2 販売価格の端数 / TC201 販売価格の端数は切り捨てする' => sub {
             my $sale_product = My::SaleProduct->new(id => 2, price => 90);
             my $discount = My::Discount->new( percentage => 25);
-            is subject($sale_product, $normal_user, $discount), [67, U]
+            is subject($sale_product, $normal_user, $discount), [67, U];
         };
 
         subtest '3.3 セール商品とクーポン券の併用 / TC301' => sub {
@@ -66,9 +64,9 @@ subtest '割引率 / total_discount_percentage' => sub {
     my $normal_user = My::User->new( id => 1, is_premium => 0 );
     my $premium_user = My::User->new( id => 2, is_premium => 1 );
 
-    my sub subject {
-        my ($result, $err) = total_discount_percentage(@_);
-        [ $result, $err ];
+    my sub subject(@args) {
+        my ($result, $err) = total_discount_percentage(@args);
+        return [ $result, $err ];
     }
 
     subtest '適用される割引率の計算' => sub {
